@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Classroom;
-use App\Models\Gender;
-use App\Models\Grade;
-use App\Models\MyParent;
-use App\Models\Nationalitie;
-use App\Models\Religion;
-use App\Models\Role;
-use App\Models\Student;
-use App\Models\Type_Blood;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Grade;
+use App\Models\Gender;
+use App\Models\Student;
+use App\Models\MyParent;
+use App\Models\Religion;
+use App\Models\Classroom;
+use App\Models\Type_Blood;
+use App\Models\Nationalitie;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 

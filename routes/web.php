@@ -276,7 +276,7 @@ use App\Http\Controllers\RegisteredUserController as ControllersRegisteredUserCo
 
 
                     // Import Jetstream authentication routes
-                    require_once(__DIR__.'/Jetstream.php');
+                    require_once(__DIR__.'/jetstream.php');
 
                     // Define a route for the application's homepage
                     Route::get('/',[DashboardController::class,'index'])->name('master');

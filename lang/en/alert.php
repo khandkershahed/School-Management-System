@@ -1,11 +1,7 @@
-
-
-
-
 <?php
 
 
-return 
+return
 [
     'error'=>'Oops! Something went wrong!',
     "exists-error"=> "Failed, There is Field with the same Value!",
@@ -79,23 +75,6 @@ return
     'subject-created'=>'Success, Created new subject :name successfully.',
     'academic-year-created'=>'Success, Created new academic year :name successfully.',
     'selected-academic-years-deleted'=>'Success, The selected academic years has been deleted successfully!',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ];

@@ -49,7 +49,7 @@
 
             <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
                 <div class="mr-auto place-self-center lg:col-span-10">
-                    <h1 class=" mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">{{ trans('auth.system-name') }}</h1>
+                    <h4 class=" mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">{{ trans('auth.system-name') }}</h4>
                     <p class="max-w-2xl p-4 mb-6 font-light text-gray-100 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">{{ trans('auth.system-info') }}</p>
                     <div class="flex justify-center w-full">
                         <a href="mailto:khandkershahed23@gmail.com" class="inline-flex w-[80%] items-center justify-center px-5 py-3 text-base font-medium text-center border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">

@@ -25,7 +25,8 @@
         </div> --}}
 
         {{-- Collapse Sidebar and Full Screen icon --}}
-        <li class="flex items-center pr-4 hs:hidden xl:inline-block" id="sidebaricononlys">
+        <li class="flex items-center pr-4 xl:inline-block" id="sidebaricononlys">
+        {{-- <li class="flex items-center pr-4 hs:hidden xl:inline-block" id="sidebaricononlys"> --}}
             <a href="javascript:;" class="block p-0 transition-all ease-nav-brand text-sm text-slate-500"
                 >
                 <div class="w-4.5 overflow-hidden">

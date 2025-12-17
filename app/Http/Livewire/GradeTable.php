@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use Illuminate\Support\Str;
-use App\Models\grade;
+use App\Models\Grade;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -57,11 +57,11 @@ final class GradeTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return Builder<\App\Models\grade>
+    * @return Builder<\App\Models\Grade>
     */
     public function datasource(): Builder
     {
-        return grade::query();
+        return Grade::query();
     }
 
     /*
@@ -304,7 +304,7 @@ final class GradeTable extends PowerGridComponent
     public function onUpdatedEditable(string $id, string $field, string $value): void
 {
     try {
-    $updated = grade::query()->findOrFail($id)->update([
+    $updated = Grade::query()->findOrFail($id)->update([
         $field => $value,
     ]);} catch (QueryException $exception) {
 

@@ -1,16 +1,15 @@
 @php
     $currentRoute = Route::currentRouteName();
     $isAdmin = auth()->user()->isAdmin();
-
-    // Helper for active links
     $activeClass = fn($routes) => in_array($currentRoute, (array)$routes)
         ? 'bg-slate-900 text-white shadow-md'
         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
 @endphp
 
-<aside
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0 shrink-0 h-full">
+<!-- Add x-cloak to prevent flash of unstyled sidebar -->
+<aside x-cloak
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'"
+    class="fixed inset-y-0 start-0 z-50 w-64 bg-white border-e border-slate-200 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0 lg:rtl:translate-x-0 shrink-0 h-full">
 
     <!-- Brand -->
     <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100">
@@ -25,7 +24,6 @@
 
     <!-- Navigation -->
     <div class="flex-1 overflow-y-auto p-4 space-y-2">
-
         <!-- Dashboard -->
         <a href="{{ route('master') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all {{ $activeClass('master') }}">
             <i class="fa-solid fa-house w-5 text-center"></i> Dashboard
@@ -38,7 +36,7 @@
                 <div class="flex items-center gap-3"><i class="fa-solid fa-users w-5 text-center"></i> Manage Users</div>
                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
             </button>
-            <div x-show="open" x-collapse class="mt-1 space-y-1 pl-11">
+            <div x-show="open" x-collapse class="mt-1 space-y-1 ps-11">
                 <a href="{{ route('students.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['students.index','student.info']) }}">Students</a>
                 <a href="{{ route('teachers.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['teachers.index','teacher.info']) }}">Teachers</a>
                 <a href="{{ route('parents.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['parents.index','parent.info']) }}">Parents</a>
@@ -53,7 +51,7 @@
                 <div class="flex items-center gap-3"><i class="fa-solid fa-book w-5 text-center"></i> Academics</div>
                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
             </button>
-            <div x-show="open" x-collapse class="mt-1 space-y-1 pl-11">
+            <div x-show="open" x-collapse class="mt-1 space-y-1 ps-11">
                 <a href="{{ route('classrooms.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('classrooms.index') }}">Classrooms</a>
                 <a href="{{ route('grade') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('grade') }}">Grades</a>
                 <a href="{{ route('subjects.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('subjects.index') }}">Subjects</a>
@@ -70,7 +68,7 @@
                 <div class="flex items-center gap-3"><i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Finance</div>
                 <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
             </button>
-            <div x-show="open" x-collapse class="mt-1 space-y-1 pl-11">
+            <div x-show="open" x-collapse class="mt-1 space-y-1 ps-11">
                 <a href="{{ route('fees.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('fees.index') }}">Fee Structures</a>
                 <a href="{{ route('feesinvoices.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('feesinvoices.index') }}">Invoices</a>
                 <a href="{{ route('payments.index') }}" class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('payments.index') }}">Payments</a>
@@ -88,6 +86,5 @@
         <a href="{{ route('posts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all {{ $activeClass('posts.index') }}">
             <i class="fa-solid fa-bullhorn w-5 text-center"></i> Notice Board
         </a>
-
     </div>
 </aside>

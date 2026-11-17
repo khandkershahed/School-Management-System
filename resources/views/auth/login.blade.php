@@ -59,7 +59,7 @@
                     <span>{{ __('auth.paperless-badge') }}</span>
                 </div>
 
-                <h1 class="text-4xl xl:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                <h1 class="text-4xl xl:text-5xl font-extrabold tracking-normal text-white leading-relaxed" style="line-height: 1.4;">
                     {{ __('auth.system-name') }}
                 </h1>
 

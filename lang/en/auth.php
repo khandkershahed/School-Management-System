@@ -1,22 +1,28 @@
 <?php
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used during authentication for various
+    | messages that we need to display to the user. You are free to modify
+    | these language lines according to your application's requirements.
+    |
+    */
+
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'remember-me' => 'Remember me',
-    'forgot-your-password' => 'Forgot your password?',
-    'login' => 'LOG IN',
+    'remember-me'=>'Remember me',
+    'forgot-your-password'=>'Forgot your password?',
+    'login'=>'LOG IN',
+    'system-info' => 'A complete School Management System designed to simplify administration, enhance communication, and streamline academic operations. Built to help schools manage students, staff, classes, finance, and daily activities efficiently from a single platform.',
+    'system-name' => 'WYZEEK — Paperless School Management System',
+    'contact-us'=>'Contact us',
 
-    // WYZEEK Paperless Branding
-    'paperless-badge' => 'WYZEEK Paperless Campus Initiative',
-    'system-name' => 'Paperless School & Campus Management',
-    'system-info' => 'One cloud platform for admissions, attendance, exams, fees, and daily administration—cutting institutional paper use by up to 75%.',
-    'stat-paper' => 'Less Paper Used',
-    'stat-cloud' => 'Cloud & Mobile',
-    'stat-registers' => 'Paper Registers',
-    'welcome-back' => 'Sign in to Campus',
-    'login-subtitle' => 'Access your paperless academic workspace',
-    'paperless-modules' => 'Admissions • Attendance • Results • Digital Fees',
-    'contact-us' => 'Contact WYZEEK',
+
+
 ];

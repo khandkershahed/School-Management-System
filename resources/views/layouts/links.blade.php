@@ -24,6 +24,7 @@
 
 
 
+<link rel="stylesheet" href="{{ asset('assets/css/wyzeek-brand.css') }}">
 @yield('styles')
 
 

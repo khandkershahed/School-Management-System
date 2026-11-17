@@ -1,0 +1,26 @@
+/* Sidebar module hierarchy. All original anchors remain untouched. */
+@media(min-width:1280px){
+  #aside{width:254px!important;max-width:254px!important;}
+  #aside .items-center>ul{max-width:none!important;}
+}
+#aside{background:#fff!important;}
+#aside .items-center>ul{max-width:none!important;overflow-x:hidden!important;padding:4px 7px 22px!important;}
+#aside .wyz-module-header{margin:10px 7px 5px;padding:9px 11px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;color:#535c73;list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-radius:10px;outline-offset:2px;}
+#aside .wyz-module-header::-webkit-details-marker{display:none;}
+#aside .wyz-module-header:hover,#aside .wyz-module-header:focus-visible{background:#fff2df;color:#a85500;}
+#aside .wyz-module-header::after{content:'+';font-size:17px;line-height:1;color:#fa9c2d;}
+#aside details[open]>.wyz-module-header::after{content:'−';}
+#aside details[open]>.wyz-module-header{background:#fff6e9;color:#a85500;}
+#aside .wyz-module-items{padding-left:0;margin:0;list-style:none;}
+#aside .wyz-module-items>li{min-width:0;}
+#aside .wyz-module-items>li>a{margin-inline:2px!important;padding-inline:9px!important;white-space:normal!important;min-height:38px;line-height:1.4;}
+#aside .wyz-module-items>li>a .sidebar-icon{min-width:0;flex:1;}
+#aside .wyz-module-items .hidden{display:none;}
+#aside .wyz-module-items ul:not(.hidden){max-width:100%;}
+#aside .wyz-module-direct{padding-inline:7px;}
+#aside .wyz-module-direct>a{white-space:normal!important;}
+#aside .wyz-module-items li a:focus-visible{outline:2px solid #fa9c2d;outline-offset:-2px;}
+#aside .wyz-sidebar-brandline{display:block;font-size:.70rem;color:#7d8498;font-weight:700;padding-inline:20px;margin:-2px 0 2px;}
+#aside .wyz-demo-menu-btn{width:100%;display:flex;align-items:center;gap:11px;margin:4px 0;padding:11px 15px;color:#182142;border:0;background:#fff7eb;border-radius:10px;text-align:left;font-size:.86rem;font-weight:800;cursor:pointer;}
+#aside .wyz-demo-menu-btn:hover,#aside .wyz-demo-menu-btn:focus-visible{background:#ffe9c6;}
+@media(max-width:1279.98px){#aside{width:min(290px,82vw)!important;max-width:290px!important;}}

@@ -26,5 +26,8 @@
 
 
 
+<script src="{{ asset('assets/js/wyzeek-modules.js') }}" defer></script>
+<script src="{{ asset('assets/js/wyzeek-mobile.js') }}" defer></script>
+<script src="{{ asset('assets/js/wyzeek-ai-demo.js') }}" defer></script>
 @yield('scripts')
 @stack('scripts')

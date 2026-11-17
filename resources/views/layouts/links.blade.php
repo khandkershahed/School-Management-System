@@ -25,6 +25,10 @@
 
 
 <link rel="stylesheet" href="{{ asset('assets/css/wyzeek-brand.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/wyzeek-responsive.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/wyzeek-modules.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/wyzeek-mobile.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/wyzeek-ai-demo.css') }}">
 @yield('styles')
 
 

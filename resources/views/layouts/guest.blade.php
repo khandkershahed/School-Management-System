@@ -83,6 +83,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/wyzeek-brand.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/wyzeek-responsive.css') }}">
 </head>
 
 <body dir="{{ App::getlocale() == 'ar' ? 'rtl' : 'ltr' }}">

@@ -412,4 +412,14 @@ return
 
 
 
+
+    // WYZEEK: missing translation identifiers (source scan).
+    'register' => 'Register User',
+    'no-parents' => 'No parents found.',
+    'no-grades' => 'No grades found.',
+    'delete_processingfee' => 'Delete Processing Fee',
+    'delete_processingfee_title' => 'Are you sure you want to delete this processing fee?',
+    'delete-teacher-assign-classroom-title' => 'Are you sure you want to remove this teacher from the classroom?',
+    'delete_academic_year' => 'Delete Academic Year',
+    'selected_graduations_back_title' => 'Return selected students to active enrollment?',
 ];

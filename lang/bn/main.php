@@ -395,4 +395,13 @@ return [
     'delete-academic-years-title' => 'আপনি কি নিশ্চিত নির্বাচিত একাডেমিক বছরগুলো মুছে ফেলতে চান?',
     'count-parent-children' => 'সন্তান',
     'get-total-children-debit' => 'সন্তানদের মোট ডেবিট',
+
+    // WYZEEK: missing translation identifiers (source scan).
+    'register' => 'ব্যবহারকারী নিবন্ধন',
+    'no-parents' => 'কোনো অভিভাবক পাওয়া যায়নি।',
+    'no-grades' => 'কোনো গ্রেড পাওয়া যায়নি।',
+    'delete_processingfee' => 'প্রসেসিং ফি মুছুন',
+    'delete_processingfee_title' => 'আপনি কি নিশ্চিত এই প্রসেসিং ফি মুছে ফেলতে চান?',
+    'delete-teacher-assign-classroom-title' => 'আপনি কি নিশ্চিত এই ক্লাসরুম থেকে শিক্ষককে সরাতে চান?',
+    'delete_academic_year' => 'একাডেমিক বছর মুছুন',
 ];

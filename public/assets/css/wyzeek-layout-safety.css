@@ -1,0 +1,34 @@
+/* WYZEEK layout-only safety patch; visual styles intentionally untouched. */
+/* Fix flex min-content width, prevent viewport-wide horizontal overflow. */
+html, body {max-width:100%;}
+body > div[x-data] {min-width:0;max-width:100%;}
+body > div[x-data] > div.flex-1 {min-width:0;}
+main.flex-1 {min-width:0;min-height:0;}
+main.flex-1 > div {min-width:0;max-width:100%;}
+header.h-16 {min-width:0;max-width:100%;}
+header.h-16 > div {min-width:0;}
+/* Ensure PowerGrid and other oversized tables scroll inside their own area. */
+main :is(.table-responsive, .table-container, .overflow-x-auto, .powergrid-table-container) {max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+main :is(.grid, .flex) > * {min-width:0;}
+@media (min-width:1280px) {
+  /* Sidebar participates in layout on desktop and never covers dashboard. */
+  #aside {flex-shrink:0;}
+  body > div[x-data] > div.flex-1 {flex:1 1 0%;}
+}
+@media (min-width:768px) and (max-width:1279.98px) {
+  #aside {max-width:min(20rem,85vw);}
+}
+@media (max-width:767.98px) {
+  /* Existing footer menu already owns the sidebar action. */
+  .wyz-header-menu-toggle {display:none !important;}
+  /* Reserve space for the existing floating bottom bar. */
+  main.flex-1 {padding-bottom:calc(100px + env(safe-area-inset-bottom,0px)) !important;}
+  main.flex-1 > div {min-width:0;max-width:100%;}
+  #aside {width:min(18rem,calc(100vw - 28px)) !important;max-width:calc(100vw - 28px) !important;}
+  body.wyz-drawer-open #aside {pointer-events:auto !important;}
+  body:not(.wyz-drawer-open) #aside {pointer-events:none !important;}
+  /* Keep bottom Menu reachable while drawer is open, preserving its original appearance. */
+  body.wyz-drawer-open .wyz-mobile-overlay {z-index:99996 !important;}
+  body.wyz-drawer-open .wyz-mobile-nav {pointer-events:auto;}
+  /* Never resize text, cards, buttons or the existing color palette. */
+}

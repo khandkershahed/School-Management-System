@@ -1,230 +1,115 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ App::getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <title>WYZEEK | Paperless Education Platform</title>
     <meta name="title" content="WYZEEK | Paperless Education Platform">
-    <meta name="description"
-        content="A complete School Management System developed by WYZEEK to manage students, teachers, parents, classes, exams, attendance, fees, and online classes from one powerful platform.">
-    <meta name="keywords"
-        content="school management system, laravel school management, student management system, education software, school ERP, wyzeek">
-    <meta name="author" content="WYZEEK">
-    <meta name="robots" content="index, follow">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A complete School Management System developed by WYZEEK...">
 
-    <!-- Canonical -->
-    <link rel="canonical" href="{{ url('/') }}">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url('/') }}">
-    <meta property="og:title" content="WYZEEK | Paperless Education Platform">
-    <meta property="og:description"
-        content="Manage students, teachers, parents, exams, attendance, fees, and online classes with a modern paperless education platform by WYZEEK.">
-    <meta property="og:image" content="{{ asset('assets/img/wyzeek-logo-dark.png') }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="WYZEEK Paperless Education">
-    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="{{ url('/') }}">
-    <meta name="twitter:title" content="WYZEEK | Paperless Education Platform">
-    <meta name="twitter:description"
-        content="A powerful Laravel-based School Management System to streamline academic and administrative operations.">
-    <meta name="twitter:image" content="{{ asset('assets/img/wyzeek-logo-dark.png') }}">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/wyzeek-favicon-32.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/img/wyzeek-apple-touch-icon.png') }}">
-
-    <!-- Set the CSRF token for the document. -->
+    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Set the title of the document based on the current page title. -->
     <title>WYZEEK - @yield('Pagetitle', 'Dashboard')</title>
 
-    {{-- ----------- Links ------------- --}}
     <style>
-        /* Apply Inter for English, Hind Siliguri for Bengali */
         body {
             font-family: 'Inter', 'Hind Siliguri', sans-serif;
         }
-
-        @media (min-width: 1024px) {
+        .d-lg-none {
+            display: none !important;
+        }
+        @media (max-width: 768px) {
             .d-lg-none {
-                display: none !important;
+                display: block !important;
             }
         }
     </style>
-    <!-- Include links to external resources such as CSS files and JavaScript libraries. -->
+
     @include('layouts.links')
-
-    {{-- ----------- Links ------------- --}}
-
-
 </head>
 
+<body class="m-0 font-sans antialiased font-normal text-base leading-default bg-slate-50 text-slate-600 h-[100dvh] overflow-hidden">
 
+    {{-- Alpine State Wrapper for Sidebar --}}
+    <div x-data="{ sidebarOpen: false }"
+         @toggle-sidebar.window="sidebarOpen = !sidebarOpen"
+         class="flex h-full w-full overflow-hidden">
 
+        {{-- Mobile Overlay --}}
+        <div x-show="sidebarOpen" x-transition.opacity x-cloak
+             class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"
+             @click="sidebarOpen = false"></div>
 
-<body class="m-0 font-sans antialiased font-normal text-base leading-default bg-gray-50 text-slate-500 h-screen ">
-
-
-    {{-- <div id="spinner" class="fixed top-0 left-0 h-screen w-screen flex justify-center items-center bg-gray-900 bg-opacity-50" style="z-index: 9999; transition: opacity 0.3s ease-in-out;">
-            <div class="rounded-md p-4 w-full mx-auto" style="background-color:#f2f2f2">
-              <div class="animate-pulse flex space-x-4">
-                <div class="bg-white shadow-2xl bg-opacity-50 m-4 ml-10 mr-5 rounded-lg" style="width:15vw;height:90vh;"></div>
-                <div class="flex-1 space-y-6 py-1">
-                  <div class="h-20 rounded-lg bg-white shadow-lg bg-opacity-60"></div>
-                  <div class="space-y-3">
-                    <div class="grid grid-cols-3 gap-4">
-                      <div class="bg-white shadow-xl bg-opacity-50 rounded-lg col-span-2 ml-10 mr-5" style="height: 30vh; width: 70vw;"></div>
-                      <div class="bg-white shadow-xl bg-opacity-50 rounded-lg col-span-2 ml-10 mr-5" style="height: 20vh; width: 60vw;"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> --}}
-
-
-
-
-
-
-
-    {{-- ---------------------- Sidebar  -------------------------------- --}}
-    <!-- Include the main sidebar for the application. -->
-
-    @switch(App::getlocale())
-        {{-- Right to left language put them with case ar --}}
-        {{-- @case('Right to left language') --}}
-        @case('ar')
-            @include('layouts.rtl.main-sidebar')
-        @break
-
-        {{-- Left to right language put them with case en --}}
-        {{-- @case('Left to right language') --}}
-        @case('en')
-            @include('layouts.ltr.main-sidebar')
-        @break
-
-        {{-- Default Language (Only Choose One!) --}}
-
-        @default
-            @include('layouts.ltr.main-sidebar')
-    @endswitch
-    {{-- ---------------------- End Sidebar  ------------------------------ --}}
-
-
-    {{-- ---------------------------------------------------- Main Tag  ---------------------------------------------------------- --}}
-    <!-- Create the main container for the application. -->
-    <!-- Determine the language direction and include the appropriate sidebar -->
-
-    @switch(App::getlocale())
-        {{-- Right to left language put them with case ar --}}
-        {{-- @case('Right to left language') --}}
-        @case('ar')
-            <main id="mainRight"
-                class="ease-soft-in-out xl:mr-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200 ">
+        {{-- ---------------------- Sidebar -------------------------------- --}}
+        @switch(App::getlocale())
+            @case('ar')
+                @include('layouts.rtl.main-sidebar')
             @break
-
-            {{-- Left to right language put them with case en --}}
-            {{-- @case('Left to right language') --}}
             @case('en')
-                <main id="mainLeft"
-                    class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200">
+                @include('layouts.ltr.main-sidebar')
+            @break
+            @default
+                @include('layouts.ltr.main-sidebar')
+        @endswitch
+        {{-- ---------------------- End Sidebar ------------------------------ --}}
+
+
+        {{-- ---------------------- Main Tag -------------------------------- --}}
+        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative">
+
+            {{-- ---------------------- Navbar -------------------------------- --}}
+            @switch(App::getlocale())
+                @case('ar')
+                    @include('layouts.rtl.main-header')
                 @break
-
-                {{-- Default Language (Only Choose One!) --}}
-
+                @case('en')
+                    @include('layouts.ltr.main-header')
+                @break
                 @default
-                    <main id="mainLeft"
-                        class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200">
-                @endswitch
+                    @include('layouts.ltr.main-header')
+            @endswitch
+            {{-- ---------------------- END Navbar -------------------------------- --}}
 
 
+            {{-- ---------------------- Content -------------------------------- --}}
+            <main class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 relative">
+                <div class="mx-auto max-w-7xl">
+                    @if (Route::currentRouteName() === 'master')
+                        @include('layouts.wyzeek-paperless-banner')
+                    @endif
 
-                {{-- ---------------------- Navbar  -------------------------------- --}}
-                <!-- Include the application navbar. -->
-                <!-- Determine the language direction and include the appropriate navbar -->
-
-                @switch(App::getlocale())
-                    {{-- Right to left language put them with case ar --}}
-                    {{-- @case('Right to left language') --}}
-                    @case('ar')
-                        @include('layouts.rtl.main-header')
-                    @break
-
-                    {{-- Left to right language put them with case en --}}
-                    {{-- @case('Left to right language') --}}
-                    @case('en')
-                        @include('layouts.ltr.main-header')
-                    @break
-
-                    {{-- Default Language (Only Choose One!) --}}
-
-                    @default
-                        @include('layouts.ltr.main-header')
-                @endswitch
-                {{-- ---------------------- END Navbar  -------------------------------- --}}
-
-
-
-
-                {{-- ---------------------- Content  -------------------------------- --}}
-
-                <div class="py-12 pt-6">
-                    <div class=" mx-auto sm:px-6 lg:px-8">
-                        {{-- <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg"> --}}
-                        @if (Route::currentRouteName() === 'master')
-                            @include('layouts.wyzeek-paperless-banner')
-                        @endif
-                        @yield('Content')
-
-                        {{-- </div> --}}
-                    </div>
+                    @yield('Content')
                 </div>
-
-                {{-- ------------------- End Content  -------------------------------- --}}
-
-
-
-
-                {{-- ---------------------- Footer  -------------------------------- --}}
-                @switch(App::getlocale())
-                    {{-- Right to left language put them with case en --}}
-                    {{-- @case('Right to left language') --}}
-                    @case('ar')
-                        @include('layouts.rtl.footer')
-                    @break
-
-                    {{-- Left to right language put them with case en --}}
-                    {{-- @case('Left to right language') --}}
-                    @case('en')
-                        @include('layouts.ltr.footer')
-                    @break
-
-                    {{-- Default Language (Only Choose One!) --}}
-
-                    @default
-                        @include('layouts.ltr.footer')
-                @endswitch
-                {{-- ---------------------- End Footer  ------------------------------ --}}
-
             </main>
-            {{-- ------------------------------------------------------ End Main Tag  ----------------------------------------------------------------- --}}
+            {{-- ------------------- End Content -------------------------------- --}}
 
-            @include('layouts.wyzeek-mobile-nav')
-            @include('layouts.wyzeek-ai-demo')
 
-            {{-- --------------------------------------------- Footer scripts  -------------------------------------------------- --}}
-            @include('layouts.footer-scripts')
-            {{-- -----------------------------------------  End Footer scripts  -------------------------------------------------- --}}
+            {{-- ---------------------- Footer -------------------------------- --}}
+            @switch(App::getlocale())
+                @case('ar')
+                    @include('layouts.rtl.footer')
+                @break
+                @case('en')
+                    @include('layouts.ltr.footer')
+                @break
+                @default
+                    @include('layouts.ltr.footer')
+            @endswitch
+            {{-- ---------------------- End Footer ------------------------------ --}}
+
+        </div>
+    </div>
+
+    @include('layouts.wyzeek-mobile-nav')
+    @include('layouts.wyzeek-ai-demo')
+
+    {{-- --------------------------------------------- Footer scripts -------------------------------------------------- --}}
+    @include('layouts.footer-scripts')
+    {{-- -----------------------------------------  End Footer scripts  -------------------------------------------------- --}}
 </body>
 
 </html>

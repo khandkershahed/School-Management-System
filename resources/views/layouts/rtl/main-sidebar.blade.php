@@ -3,7 +3,7 @@
 <aside id="aside" class="fixed  inset-y-0 right-0 flex-wrap  items-center justify-between inline-block fs:bg-white p-0 my-4 dash-translate-x-full duration-200 xs:bg-white border-0 shadow-none dark:bg-gray-950 ease-soft-in-out z-10 xl:mr-4 rounded-2xl xl:translate-x-0 xl:bg-transparent ps ps__rtl ps--active-y max-w-64 overflow-y-auto ">
 
     <div class="h-19.5 " >
-        <i class="absolute top-0 left-0  p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" sidenav-close></i>
+        <i class="absolute top-0 left-0  p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" sidenav-close data-wyz-close-sidebar></i>
         <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="{{route('master')}}" target="_blank">
             <img src={{asset("assets/img/wyzeek-logo-dark.png")}} class="inline h-full max-w-full transition-all duration-200 ease-nav-brand wyz-brand-logo" alt="WYZEEK" />
             <div id="sidebariconOnly1" class="sidebar-icon inline-flex">

@@ -1,23 +1,25 @@
 <div x-data="{ openLang: false, openProfile: false, openNotif: false }" class="relative z-40">
     <header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6">
 
-        {{-- Left: Mobile Menu Toggle & Page Title --}}
+        {{-- Left: Sidebar Toggle, Mobile Logo & Page Title --}}
         <div class="flex items-center gap-3 min-w-0">
-            {{-- Hamburger Button: Dispatches global event --}}
-            <a href="{{ route('master') }}" class="flex items-center justify-center w-full d-lg-none">
-                <!-- Adjusted height to make the logo prominent -->
-                <img src="{{ asset('assets/img/wyzeek-icon.png') }}" alt="WYZEEK" class="h-9 w-auto object-contain">
-            </a>
-            {{-- <button @click="$dispatch('toggle-sidebar')" type="button"
-                class="lg:hidden text-slate-500 hover:text-slate-700 focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 shrink-0">
+            {{-- Hamburger Button: Works on Mobile, Tablet & Desktop --}}
+            <button @click="$dispatch('toggle-sidebar')" type="button"
+                class="wyz-header-menu-toggle text-slate-500 hover:text-slate-700 focus:outline-none p-2 rounded-lg hover:bg-slate-100 shrink-0 transition-colors"
+                aria-label="Toggle Sidebar">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-            </button> --}}
+            </button>
 
-            {{-- Added min-w-0 and truncate to fix the "ent System" cutoff --}}
+            {{-- Mobile/Tablet Brand Icon (Hidden on Desktop where sidebar logo shows) --}}
+            <a href="{{ route('master') }}" class="flex items-center shrink-0 xl:hidden">
+                <img src="{{ asset('assets/img/wyzeek-icon.png') }}" alt="WYZEEK" class="h-9 w-auto object-contain">
+            </a>
+
+            {{-- Page Title --}}
             <h1 class="text-lg font-semibold text-slate-800 hidden sm:block truncate">
-                {{ trans('main-sidebar.' . Route::currentRouteName()) ?? 'Dashboard' }}
+                {{ \Illuminate\Support\Facades\Lang::has('main-sidebar.' . Route::currentRouteName(), app()->getLocale()) ? __('main-sidebar.' . Route::currentRouteName()) : \Illuminate\Support\Str::headline(str_replace('.', ' ', Route::currentRouteName() ?? 'dashboard')) }}
             </h1>
         </div>
 
@@ -91,7 +93,7 @@
                 </div>
             @endif
 
-            {{-- NOTIFICATIONS (Now with proper dropdown) --}}
+            {{-- NOTIFICATIONS --}}
             <div class="relative">
                 <button @click="openNotif = !openNotif" type="button"
                     class="relative p-2 text-slate-400 hover:text-slate-600 transition rounded-full hover:bg-slate-50 border border-transparent hover:border-slate-200">

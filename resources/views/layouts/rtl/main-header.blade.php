@@ -5,12 +5,12 @@
                   <!-- breadcrumb -->
                   <ol class="flex flex-wrap pt-1 bg-transparent rounded-lg">
                       <li class="pl-2 leading-normal text-sm">
-                          <a class="opacity-50 text-slate-700" href="javascript:;">{{trans('main-sidebar.' . Route::currentRouteName())}}</a>
+                          <a class="opacity-50 text-slate-700" href="javascript:;">{{ \Illuminate\Support\Facades\Lang::has('main-sidebar.' . Route::currentRouteName(), app()->getLocale()) ? __('main-sidebar.' . Route::currentRouteName()) : \Illuminate\Support\Str::headline(str_replace('.', ' ', Route::currentRouteName() ?? 'dashboard')) }}</a>
                       </li>
                       <li class="text-sm pl-2 capitalize leading-normal text-slate-700 before:float-right before:pl-2 before:text-gray-600 before:content-['/']"
                           aria-current="page">RTL</li>
                   </ol>
-                  <h6 class="mb-0 font-bold capitalize">{{trans('main-sidebar.' . Route::currentRouteName())}}</h6>
+                  <h6 class="mb-0 font-bold capitalize">{{ \Illuminate\Support\Facades\Lang::has('main-sidebar.' . Route::currentRouteName(), app()->getLocale()) ? __('main-sidebar.' . Route::currentRouteName()) : \Illuminate\Support\Str::headline(str_replace('.', ' ', Route::currentRouteName() ?? 'dashboard')) }}</h6>
                 </nav>
                 <li class="flex items-center pr-4 hs:hidden xl:inline-block" id="sidebaricononlys">
                     <a href="javascript:;" class="block p-0 transition-all ease-nav-brand text-sm text-slate-500"

@@ -827,6 +827,16 @@
             });
         });
 
+        /* Existing sidebar button: open the same chat dialog, without navigation. */
+        document.addEventListener('click', function (event) {
+            var entry = event.target.closest('[data-wyz-open-ai]');
+            if (!entry) return;
+            event.preventDefault();
+            document.dispatchEvent(new CustomEvent('wyzeek:close-mobile-drawer'));
+            open();
+        });
+        document.addEventListener('wyzeek:open-ai', open);
+
         /* ------------------------- sidebar entry ------------------------- */
         function addSidebarLink() {
             var menu = document.querySelector('#aside [data-wyzeek-module-menu]');

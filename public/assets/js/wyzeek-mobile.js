@@ -37,6 +37,15 @@
   function close(){document.body.classList.remove('wyz-drawer-open');overlay.hidden=true;more.setAttribute('aria-expanded','false');more.focus({preventScroll:true});}
   function open(){document.body.classList.add('wyz-drawer-open');overlay.hidden=false;more.setAttribute('aria-expanded','true');const first=aside.querySelector('a[href]');if(first)first.focus({preventScroll:true});}
   more.addEventListener('click',()=>document.body.classList.contains('wyz-drawer-open')?close():open());
+  document.addEventListener('wyzeek:close-mobile-drawer',()=>{
+    if(document.body.classList.contains('wyz-drawer-open'))close();
+  });
+  aside.addEventListener('click',event=>{
+    if(window.innerWidth>=768 || !document.body.classList.contains('wyz-drawer-open'))return;
+    if(event.target.closest('[data-wyz-close-sidebar]')){close();return;}
+    const link=event.target.closest('a[href]');
+    if(link && link.getAttribute('href')!=='#' && !link.hasAttribute('data-wyz-open-ai'))close();
+  });
   overlay.addEventListener('click',close);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.body.classList.contains('wyz-drawer-open'))close();});
   window.addEventListener('resize',()=>{if(window.innerWidth>767&&document.body.classList.contains('wyz-drawer-open'))close();});
@@ -45,7 +54,8 @@
    if(!ai)return;
    ai.hidden=false;
    const fee=tab('fees');if(fee)fee.hidden=true;
-   ai.addEventListener('click',()=>{const openDemo=document.getElementById('wyz-ai-launcher');if(openDemo)openDemo.click();});
+
+   ai.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('wyzeek:open-ai')));
   });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();

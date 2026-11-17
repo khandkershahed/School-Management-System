@@ -90,4 +90,7 @@ return
     //--------------------------------------------------------------------------------------------//
 
 
+
+    // WYZEEK: missing translation identifiers (source scan).
+    'store-recovery-codes' => 'Store these recovery codes in a safe place.',
 ];

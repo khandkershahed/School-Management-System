@@ -1,69 +1,270 @@
 /* WYZEEK responsive safety layer: desktop > 1280px intentionally close to existing design. */
-*,*::before,*::after{box-sizing:border-box;}
-html{overflow-x:clip;scroll-padding-top:80px;}
-body{max-width:100%;overflow-x:clip;-webkit-text-size-adjust:100%;}
-img,video,svg,canvas{max-width:100%;}
-:where(#mainLeft,#mainRight){min-width:0;max-width:100%;}
-:where(#mainLeft,#mainRight) > .py-12{min-width:0;}
-:where(#mainLeft,#mainRight) > .py-12 > div{min-width:0;max-width:100%;}
-:where(#mainLeft,#mainRight) :where(input,select,textarea){max-width:100%;}
-:where(#mainLeft,#mainRight) :where(.flex,.grid) > *{min-width:0;}
-:where(#mainLeft,#mainRight) :where(.max-w-full,.w-full){max-width:100%;}
-:where(#mainLeft,#mainRight) :where(table){border-collapse:collapse;}
-:where(#mainLeft,#mainRight) :where(.overflow-auto,.overflow-x-auto){-webkit-overflow-scrolling:touch;}
-.wyz-login-shell{min-height:100dvh;}
-.wyz-login-card{min-width:0;}
-@media (max-width: 1279.98px){
-  :where(#mainLeft,#mainRight){margin-inline:0!important;width:100%!important;}
-  :where(#mainLeft,#mainRight)>nav[navbar-main]{margin-inline:12px!important;}
-  :where(#mainLeft,#mainRight) > .py-12{padding-top:20px!important;}
-  :where(#mainLeft,#mainRight) > .py-12 > div{padding-inline:12px!important;}
-  #aside{max-height:calc(100dvh - 16px)!important;}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
-@media (max-width: 1023.98px){
-  .wyz-login-shell{grid-template-columns:1fr!important;}
-  .wyz-login-hero{height:auto!important;min-height:260px;padding:48px 22px 32px!important;}
-  .wyz-login-card{width:100%;}
-  .wyz-login-shell .min-h-screen{min-height:0!important;padding-block:30px;}
-  .wyz-login-shell .sm\\:max-w-md{max-width:480px;}
-  :where(#mainLeft,#mainRight) .grid.grid-cols-6{grid-template-columns:repeat(2,minmax(0,1fr));}
-  :where(#mainLeft,#mainRight) .grid.grid-cols-4{grid-template-columns:repeat(2,minmax(0,1fr));}
-  :where(#mainLeft,#mainRight) :where(.table-responsive,.table-container){overflow-x:auto;max-width:100%;}
-  :where(#mainLeft,#mainRight) :where(.max-w-screen-xl,.max-w-screen-lg){max-width:100%;}
+
+html {
+    overflow-x: clip;
+    scroll-padding-top: 80px;
 }
-@media (max-width: 767.98px){
-  html{font-size:16px;}
-  :where(#mainLeft,#mainRight){border-radius:0!important;}
-  :where(#mainLeft,#mainRight)>nav[navbar-main]{margin:0 10px!important;padding:8px 0!important;}
-  :where(#mainLeft,#mainRight)>nav[navbar-main] > div{gap:8px;min-width:0;flex-wrap:wrap;}
-  :where(#mainLeft,#mainRight)>nav[navbar-main] ol{margin-right:0!important;}
-  :where(#mainLeft,#mainRight) > .py-12{padding-block:12px 28px!important;}
-  :where(#mainLeft,#mainRight) > .py-12 > div{padding-inline:10px!important;}
-  :where(#mainLeft,#mainRight) :where(.grid.grid-cols-2,.grid.grid-cols-3,.grid.grid-cols-4,.grid.grid-cols-6){grid-template-columns:minmax(0,1fr)!important;}
-  :where(#mainLeft,#mainRight) :where(.sm\\:w-1\/2){min-width:0;}
-  :where(#mainLeft,#mainRight) :where(.p-8,.px-8){padding-inline:14px;}
-  :where(#mainLeft,#mainRight) :where(.px-6){padding-inline:12px;}
-  :where(#mainLeft,#mainRight) :where(.mx-6){margin-inline:10px;}
-  :where(#mainLeft,#mainRight) :where(.flex) {max-width:100%;}
-  :where(#mainLeft,#mainRight) :where(input,textarea,select){font-size:16px;min-height:40px;}
-  :where(#mainLeft,#mainRight) :where(button,[type="submit"],[role="button"]){touch-action:manipulation;}
-  :where(#mainLeft,#mainRight) :where(table){min-width:560px;}
-  /* Tables are scrollable rather than shrinking columns until they become unreadable. */
-  :where(#mainLeft,#mainRight) :where(.overflow-x-auto,.overflow-auto,.relative.overflow-x-auto){overscroll-behavior-x:contain;}
-  :where(#mainLeft,#mainRight) > .py-12{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .wyz-login-hero{min-height:0;padding:26px 16px!important;}
-  .wyz-login-hero-brand{max-width:170px;margin-bottom:8px;}
-  .wyz-login-hero .wyz-paperless-stats{gap:7px;}
-  .wyz-login-hero .wyz-paperless-stats > div{padding:9px;}
-  .wyz-login-shell .min-h-screen{padding:18px 10px!important;}
-  .wyz-login-shell .sm\\:max-w-md{max-width:100%;}
-  .wyz-login-shell [class*="sm:max-w-md"]{max-width:100%!important;}
-  .wyz-login-shell .px-6.py-4{padding:22px 16px!important;}
-  .wyz-login-shell :where(input,select,textarea){font-size:16px!important;max-width:100%;}
+
+body {
+    max-width: 100%;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
 }
-@media (max-width: 390px){
-  .wyz-login-hero .wyz-paperless-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
-  :where(#mainLeft,#mainRight)>nav[navbar-main] h6{font-size:.87rem;}
-  :where(#mainLeft,#mainRight) :where(button){max-width:100%;}
+
+img,
+video,
+svg,
+canvas {
+    max-width: 100%;
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto!important;}}
+
+:where(#mainLeft, #mainRight) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+:where(#mainLeft, #mainRight)>.py-12 {
+    min-width: 0;
+}
+
+:where(#mainLeft, #mainRight)>.py-12>div {
+    min-width: 0;
+    max-width: 100%;
+}
+
+:where(#mainLeft, #mainRight) :where(input, select, textarea) {
+    max-width: 100%;
+}
+
+:where(#mainLeft, #mainRight) :where(.flex, .grid)>* {
+    min-width: 0;
+}
+
+:where(#mainLeft, #mainRight) :where(.max-w-full, .w-full) {
+    max-width: 100%;
+}
+
+:where(#mainLeft, #mainRight) :where(table) {
+    border-collapse: collapse;
+}
+
+:where(#mainLeft, #mainRight) :where(.overflow-auto, .overflow-x-auto) {
+    -webkit-overflow-scrolling: touch;
+}
+
+.wyz-login-shell {
+    min-height: 100dvh;
+}
+
+.wyz-login-card {
+    min-width: 0;
+}
+
+@media (max-width: 1279.98px) {
+    :where(#mainLeft, #mainRight) {
+        margin-inline: 0 !important;
+        width: 100% !important;
+    }
+
+    :where(#mainLeft, #mainRight)>nav[navbar-main] {
+        margin-inline: 12px !important;
+    }
+
+    :where(#mainLeft, #mainRight)>.py-12 {
+        padding-top: 20px !important;
+    }
+
+    :where(#mainLeft, #mainRight)>.py-12>div {
+        padding-inline: 12px !important;
+    }
+
+    #aside {
+        max-height: calc(100dvh - 16px) !important;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    .wyz-login-shell {
+        grid-template-columns: 1fr !important;
+    }
+
+    .wyz-login-hero {
+        height: auto !important;
+        min-height: 260px;
+        padding: 48px 22px 32px !important;
+    }
+
+    .wyz-login-card {
+        width: 100%;
+    }
+
+    .wyz-login-shell .min-h-screen {
+        min-height: 0 !important;
+        padding-block: 30px;
+    }
+
+    .wyz-login-shell .sm\\:max-w-md {
+        max-width: 480px;
+    }
+
+    :where(#mainLeft, #mainRight) .grid.grid-cols-6 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :where(#mainLeft, #mainRight) .grid.grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :where(#mainLeft, #mainRight) :where(.table-responsive, .table-container) {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.max-w-screen-xl, .max-w-screen-lg) {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    html {
+        font-size: 16px;
+    }
+
+    :where(#mainLeft, #mainRight) {
+        border-radius: 0 !important;
+    }
+
+    :where(#mainLeft, #mainRight)>nav[navbar-main] {
+        margin: 0 10px !important;
+        padding: 8px 0 !important;
+    }
+
+    :where(#mainLeft, #mainRight)>nav[navbar-main]>div {
+        gap: 8px;
+        min-width: 0;
+        flex-wrap: wrap;
+    }
+
+    :where(#mainLeft, #mainRight)>nav[navbar-main] ol {
+        margin-right: 0 !important;
+    }
+
+    :where(#mainLeft, #mainRight)>.py-12 {
+        padding-block: 12px 28px !important;
+    }
+
+    :where(#mainLeft, #mainRight)>.py-12>div {
+        padding-inline: 10px !important;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.grid.grid-cols-2, .grid.grid-cols-3, .grid.grid-cols-4, .grid.grid-cols-6) {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.sm\\:w-1\/2) {
+        min-width: 0;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.p-8, .px-8) {
+        padding-inline: 14px;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.px-6) {
+        padding-inline: 12px;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.mx-6) {
+        margin-inline: 10px;
+    }
+
+    :where(#mainLeft, #mainRight) :where(.flex) {
+        max-width: 100%;
+    }
+
+    :where(#mainLeft, #mainRight) :where(input, textarea, select) {
+        font-size: 16px;
+        /* min-height: 40px; */
+    }
+
+    :where(#mainLeft, #mainRight) :where(button, [type="submit"], [role="button"]) {
+        touch-action: manipulation;
+    }
+
+    :where(#mainLeft, #mainRight) :where(table) {
+        min-width: 560px;
+    }
+
+    /* Tables are scrollable rather than shrinking columns until they become unreadable. */
+    :where(#mainLeft, #mainRight) :where(.overflow-x-auto, .overflow-auto, .relative.overflow-x-auto) {
+        overscroll-behavior-x: contain;
+    }
+
+    :where(#mainLeft, #mainRight)>.py-12 {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .wyz-login-hero {
+        min-height: 0;
+        padding: 26px 16px !important;
+    }
+
+    .wyz-login-hero-brand {
+        max-width: 170px;
+        margin-bottom: 8px;
+    }
+
+    .wyz-login-hero .wyz-paperless-stats {
+        gap: 7px;
+    }
+
+    .wyz-login-hero .wyz-paperless-stats>div {
+        padding: 9px;
+    }
+
+    .wyz-login-shell .min-h-screen {
+        padding: 18px 10px !important;
+    }
+
+    .wyz-login-shell .sm\\:max-w-md {
+        max-width: 100%;
+    }
+
+    .wyz-login-shell [class*="sm:max-w-md"] {
+        max-width: 100% !important;
+    }
+
+    .wyz-login-shell .px-6.py-4 {
+        padding: 22px 16px !important;
+    }
+
+    .wyz-login-shell :where(input, select, textarea) {
+        font-size: 16px !important;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 390px) {
+    .wyz-login-hero .wyz-paperless-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :where(#mainLeft, #mainRight)>nav[navbar-main] h6 {
+        font-size: .87rem;
+    }
+
+    :where(#mainLeft, #mainRight) :where(button) {
+        max-width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,7 +1,3 @@
-
-
-
-
 @extends('layouts.master')
 
 @section('Pagetitle',"Create Subject")

@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 @extends('layouts.master')
 
 @section('Pagetitle',"Subjects")

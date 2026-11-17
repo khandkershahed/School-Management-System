@@ -48,7 +48,18 @@
     <title>WYZEEK - @yield('Pagetitle', 'Dashboard')</title>
 
     {{-- ----------- Links ------------- --}}
+    <style>
+        /* Apply Inter for English, Hind Siliguri for Bengali */
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+        }
 
+        @media (min-width: 1024px) {
+            .d-lg-none {
+                display: none !important;
+            }
+        }
+    </style>
     <!-- Include links to external resources such as CSS files and JavaScript libraries. -->
     @include('layouts.links')
 
@@ -167,7 +178,7 @@
 
                 {{-- ---------------------- Content  -------------------------------- --}}
 
-                <div class="py-12">
+                <div class="py-12 pt-6">
                     <div class=" mx-auto sm:px-6 lg:px-8">
                         {{-- <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg"> --}}
                         @if (Route::currentRouteName() === 'master')

@@ -1,18 +1,137 @@
-/* WYZEEK: only visual branding. Loaded outside Vite so package changes are unnecessary. */
-:root { --wyz-ink:#121335; --wyz-orange:#fa9c2d; --wyz-deep:#101333; }
-.wyz-brand-logo{display:inline-block;width:156px!important;max-width:100%!important;height:auto!important;max-height:86px!important;object-fit:contain;border-radius:12px;background:#050505;}
-.wyz-auth-logo{display:block;width:155px;height:auto;border-radius:12px;background:#050505;}
-#aside > div:first-child{min-height:90px;height:auto!important;}
-.wyz-login-hero{background:linear-gradient(145deg,#111332 0%,#27254b 100%)!important;}
-.wyz-login-hero-brand{width:min(260px,70%);height:auto;margin:0 auto 18px;display:block;border-radius:12px;}
-.wyz-login-hero .wyz-paperless-text{color:#f9aa48;font-weight:800;font-size:clamp(1.1rem,2.5vw,1.8rem);line-height:1.3;text-align:center;}
-.wyz-login-hero .wyz-paperless-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px;}
-.wyz-login-hero .wyz-paperless-stats > div{padding:12px;border:1px solid rgba(255,255,255,.23);border-radius:12px;background:rgba(255,255,255,.08);}
-.wyz-login-hero .wyz-paperless-stats strong{display:block;font-size:1.35rem;color:#ffa844;}
-.wyz-login-hero .wyz-paperless-stats span{display:block;font-size:.77rem;line-height:1.5;color:#e7eaf3;}
-.wyz-paperless-banner{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:6px 24px 10px;padding:18px 22px;border:1px solid #ffdda8;border-radius:16px;background:linear-gradient(108deg,#fff9ee,#fff);box-shadow:0 5px 20px rgba(18,19,53,.035);}
-.wyz-paperless-banner h2{margin:0;color:#121335;font-size:1.03rem;font-weight:800;}
-.wyz-paperless-banner p{margin:5px 0 0;color:#4b5470;font-size:.83rem;line-height:1.5;}
-.wyz-paperless-banner strong{color:#bf6c00;}
-.wyz-paperless-banner .wyz-paperless-tag{display:inline-flex;align-items:center;flex-shrink:0;gap:8px;padding:9px 12px;background:#121335;color:#fff;border-radius:99px;font-size:.78rem;font-weight:800;}
-@media(max-width:680px){.wyz-paperless-banner{margin:8px 12px;flex-direction:column;align-items:flex-start;padding:15px}.wyz-paperless-banner .wyz-paperless-tag{font-size:.72rem}}
+/* Font family settings */
+* {
+    font-family: 'Roboto', sans-serif;
+}
+:root {
+    --wyz-ink: #121335;
+    --wyz-orange: #fa9c2d;
+    --wyz-deep: #101333;
+}
+
+.wyz-brand-logo {
+    display: inline-block;
+    width: 156px !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 86px !important;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #050505;
+}
+
+.wyz-auth-logo {
+    display: block;
+    width: 155px;
+    height: auto;
+    border-radius: 12px;
+    background: #050505;
+}
+
+#aside>div:first-child {
+    min-height: 60px;
+    height: auto !important;
+}
+
+.wyz-login-hero {
+    background: linear-gradient(145deg, #111332 0%, #27254b 100%) !important;
+}
+
+.wyz-login-hero-brand {
+    width: min(260px, 70%);
+    height: auto;
+    margin: 0 auto 18px;
+    display: block;
+    border-radius: 12px;
+}
+
+.wyz-login-hero .wyz-paperless-text {
+    color: #f9aa48;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+    line-height: 1.3;
+    text-align: center;
+}
+
+.wyz-login-hero .wyz-paperless-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.wyz-login-hero .wyz-paperless-stats>div {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, .23);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .08);
+}
+
+.wyz-login-hero .wyz-paperless-stats strong {
+    display: block;
+    font-size: 1.35rem;
+    color: #ffa844;
+}
+
+.wyz-login-hero .wyz-paperless-stats span {
+    display: block;
+    font-size: .77rem;
+    line-height: 1.5;
+    color: #e7eaf3;
+}
+
+.wyz-paperless-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin: 6px 24px 10px;
+    padding: 18px 22px;
+    border: 1px solid #ffdda8;
+    border-radius: 16px;
+    background: linear-gradient(108deg, #fff9ee, #fff);
+    box-shadow: 0 5px 20px rgba(18, 19, 53, .035);
+}
+
+.wyz-paperless-banner h2 {
+    margin: 0;
+    color: #121335;
+    font-size: 1.03rem;
+    font-weight: 800;
+}
+
+.wyz-paperless-banner p {
+    margin: 5px 0 0;
+    color: #4b5470;
+    font-size: .83rem;
+    line-height: 1.5;
+}
+
+.wyz-paperless-banner strong {
+    color: #bf6c00;
+}
+
+.wyz-paperless-banner .wyz-paperless-tag {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 8px;
+    padding: 9px 12px;
+    background: #121335;
+    color: #fff;
+    border-radius: 99px;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+@media(max-width:680px) {
+    .wyz-paperless-banner {
+        margin: 8px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px
+    }
+
+    .wyz-paperless-banner .wyz-paperless-tag {
+        font-size: .72rem
+    }
+}

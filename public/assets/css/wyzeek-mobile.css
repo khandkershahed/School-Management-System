@@ -1,23 +1,212 @@
-/* WYZEEK mobile application shell. Desktop remains almost unchanged. */
-.wyz-mobile-nav,.wyz-mobile-overlay{display:none;}
-@media(max-width:767.98px){
-  :root{--wyz-nav-height:72px;}
-  #mainLeft,#mainRight{min-height:100dvh;height:auto!important;max-height:none!important;padding-bottom:calc(var(--wyz-nav-height) + env(safe-area-inset-bottom,0px) + 14px)!important;}
-  #aside{position:fixed!important;top:0!important;bottom:0!important;margin:0!important;height:100dvh!important;max-height:100dvh!important;z-index:9997!important;border-radius:0 18px 18px 0!important;box-shadow:0 16px 60px rgba(5,7,23,.22)!important;transform:translateX(-110%)!important;visibility:hidden!important;transition:transform .22s ease,visibility .22s ease!important;}
-  [dir="rtl"] #aside{left:auto!important;right:0!important;transform:translateX(110%)!important;border-radius:18px 0 0 18px!important;}
-  body.wyz-drawer-open #aside{transform:translateX(0)!important;visibility:visible!important;}
-  body.wyz-drawer-open{overflow:hidden!important;}
-  .wyz-mobile-overlay{position:fixed;inset:0;background:rgba(14,16,40,.55);z-index:9996;}
-  .wyz-mobile-overlay:not([hidden]){display:block;}
-  .wyz-mobile-nav{position:fixed;display:flex;align-items:stretch;justify-content:space-around;inset-inline:0;bottom:0;height:calc(var(--wyz-nav-height) + env(safe-area-inset-bottom,0px));padding:7px 5px calc(7px + env(safe-area-inset-bottom,0px));z-index:9993;background:rgba(255,255,255,.97);box-shadow:0 -10px 26px rgba(19,25,55,.1);border-top:1px solid #e8eaf0;backdrop-filter:blur(16px);}
-  .wyz-mobile-tab{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;padding:4px 1px;background:transparent;border:0;color:#657087;text-decoration:none;font-size:20px;font-weight:800;cursor:pointer;line-height:1.1;touch-action:manipulation;border-radius:10px;}
-  .wyz-mobile-tab[hidden]{display:none!important;}
-  .wyz-mobile-tab span{display:block;font-size:25px;line-height:1;min-height:26px;color:inherit;}
-  .wyz-mobile-tab small{display:block;font-size:10px;line-height:1.25;white-space:nowrap;font-weight:800;}
-  .wyz-mobile-tab:hover,.wyz-mobile-tab:focus-visible,.wyz-mobile-tab[aria-current="page"]{color:#ab5b00;background:#fff2dc;}
-  .wyz-mobile-tab:focus-visible{outline:2px solid #ffae44;outline-offset:-2px;}
-  #aside [sidenav-close]{display:block!important;}
-  #aside .items-center{max-height:calc(100dvh - 105px)!important;overflow-y:auto!important;}
+/* =========================================
+   WYZEEK Mobile Application Shell (Fixed)
+   ========================================= */
+
+.wyz-mobile-nav,
+.wyz-mobile-overlay {
+    display: none;
 }
-@media (max-width:374px){.wyz-mobile-tab small{font-size:9px;letter-spacing:-.1px}.wyz-mobile-nav{padding-inline:3px;}}
-@media (prefers-reduced-motion: reduce){#aside{transition:none!important;}}
+
+@media(max-width:767.98px) {
+    :root {
+        /* Height of the floating pill */
+        --wyz-nav-height: 64px;
+    }
+
+    /* Add padding to page bottom so content doesn't hide behind nav */
+    #mainLeft,
+    #mainRight {
+        min-height: 100dvh;
+        height: auto !important;
+        max-height: none !important;
+        padding-bottom: calc(var(--wyz-nav-height) + env(safe-area-inset-bottom, 0px) + 30px) !important;
+    }
+
+    /* Sidebar Drawer */
+    #aside {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        z-index: 99999 !important;
+        border-radius: 0 18px 18px 0 !important;
+        box-shadow: 0 16px 60px rgba(5, 7, 23, .22) !important;
+        transform: translateX(-110%) !important;
+        visibility: hidden !important;
+        transition: transform .22s ease, visibility .22s ease !important;
+    }
+
+    [dir="rtl"] #aside {
+        left: auto !important;
+        right: 0 !important;
+        transform: translateX(110%) !important;
+        border-radius: 18px 0 0 18px !important;
+    }
+
+    body.wyz-drawer-open #aside {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+    }
+
+    body.wyz-drawer-open {
+        overflow: hidden !important;
+    }
+
+    .wyz-mobile-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(14, 16, 40, .55);
+        backdrop-filter: blur(4px);
+        z-index: 99998;
+    }
+
+    .wyz-mobile-overlay:not([hidden]) {
+        display: block;
+    }
+
+    /* =========================================
+       FLOATING APP NAVBAR
+       ========================================= */
+    .wyz-mobile-nav {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        /* Floating Pill Layout */
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        left: 16px;
+        right: 16px;
+        height: var(--wyz-nav-height);
+        padding: 0 10px;
+
+        /* Clean White & Shadow */
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+        z-index: 99997;
+    }
+
+    /* Tab Item Styling */
+    .wyz-mobile-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+        color: #94a3b8; /* Slate 400 (muted) */
+        background: transparent !important; /* Force remove yellow bg */
+        border: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: all 0.2s ease;
+    }
+
+    .wyz-mobile-tab svg {
+        width: 22px;
+        height: 22px;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .wyz-mobile-tab small {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        font-family: inherit;
+        line-height: 1.5;
+    }
+
+    .wyz-mobile-tab[hidden] {
+        display: none !important;
+    }
+
+    /* Active/Hover State (No background box, just color) */
+    .wyz-mobile-tab:hover,
+    .wyz-mobile-tab:active,
+    .wyz-mobile-tab[aria-current="page"] {
+        color: #4f46e5; /* Indigo 600 */
+    }
+
+    .wyz-mobile-tab[aria-current="page"] svg {
+        transform: translateY(-3px); /* Icon lifts up */
+    }
+
+    .wyz-mobile-tab[aria-current="page"] small {
+        font-weight: 800;
+        color: #312e81;
+    }
+
+    /* =========================================
+       AI FLOATING ACTION BUTTON (FAB)
+       ========================================= */
+    .wyz-tab-ai {
+        position: relative;
+        flex: 0 0 auto; /* Don't stretch */
+        width: 60px;
+    }
+
+    .wyz-ai-fab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+
+        /* Pop out of the navbar */
+        position: absolute;
+        top: -26px;
+
+        /* Gradient & Glow */
+        background: linear-gradient(135deg, #f75588, #a855f7, #ec4899);
+        color: white;
+        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4), 0 0 0 4px #ffffff;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    }
+
+    .wyz-ai-fab svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+        stroke: none;
+    }
+
+    /* AI Label */
+    .wyz-tab-ai small {
+        margin-top: 28px; /* Push text down below the FAB */
+        color: #f75588;
+        font-weight: 800;
+    }
+
+    /* AI Button Interactions */
+    .wyz-tab-ai:active .wyz-ai-fab {
+        transform: scale(0.9);
+    }
+
+    .wyz-tab-ai:hover .wyz-ai-fab {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(168, 85, 247, 0.5), 0 0 0 4px #ffffff;
+    }
+}
+
+@media (max-width:374px) {
+    .wyz-mobile-tab small {
+        font-size: 9px;
+        line-height: 1.5;
+    }
+    .wyz-mobile-nav {
+        left: 8px;
+        right: 8px;
+        padding: 0 4px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #aside {
+        transition: none !important;
+    }
+}

@@ -4,12 +4,16 @@
         {{-- Left: Mobile Menu Toggle & Page Title --}}
         <div class="flex items-center gap-3 min-w-0">
             {{-- Hamburger Button: Dispatches global event --}}
-            <button @click="$dispatch('toggle-sidebar')" type="button"
+            <a href="{{ route('master') }}" class="flex items-center justify-center w-full d-lg-none">
+                <!-- Adjusted height to make the logo prominent -->
+                <img src="{{ asset('assets/img/wyzeek-icon.png') }}" alt="WYZEEK" class="h-9 w-auto object-contain">
+            </a>
+            {{-- <button @click="$dispatch('toggle-sidebar')" type="button"
                 class="lg:hidden text-slate-500 hover:text-slate-700 focus:outline-none p-1.5 rounded-lg hover:bg-slate-100 shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-            </button>
+            </button> --}}
 
             {{-- Added min-w-0 and truncate to fix the "ent System" cutoff --}}
             <h1 class="text-lg font-semibold text-slate-800 hidden sm:block truncate">

@@ -1,16 +1,8 @@
-
-
-
-
-
-
-
 @extends('layouts.master')
 
-@section('Pagetitle',"Attendances Classroom")
+@section('Pagetitle', 'Attendances Classroom')
 
 @section('Content')
 
-<livewire:attendances.attendance-classroom-table :students="$students" :classroom="$classroom">
-
+    <livewire:attendances.attendance-classroom-table :students="$students" :classroom="$classroom">
 @endsection

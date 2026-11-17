@@ -1,864 +1,237 @@
 <aside id="aside"
     class="fixed inset-y-0 left-0 flex-wrap items-center justify-between block p-0 my-4 transition-all
     duration-200 bg-white border-0 shadow-none xl:ml-4 dark:bg-gray-950 ease-soft-in-out z-20 rounded-2xl xl:translate-x-0
-    xl:bg-transparent ps ps--active-y -translate-x-full shadow-soft-xl max-w-24 overflow-hidden" style="border: 1px solid #eee;">
-    <div class="h-19.5 grid">
-        <i class="absolute top-0 right-0 hidden p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden"
-            sidenav-close></i>
-        <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="{{ route('master') }}"
-            target="_blank">
-            <img src={{ asset('assets/img/wyzeek-logo-dark.png') }}
-                class="inline h-full max-w-full transition-all duration-200 ease-nav-brand wyz-brand-logo" alt="WYZEEK" />
-            {{-- <div id="sidebariconOnly1" class="sidebar-icon">
-                <span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand ">{{ config('app.name') }}</span>
-            </div> --}}
+    xl:bg-transparent ps ps--active-y -translate-x-full shadow-soft-xl max-w-24 overflow-hidden"
+    style="border: 1px solid #eee;">
+    @php
+        $currentRoute = Route::currentRouteName();
+        $isAdmin = auth()->user()->isAdmin();
+        $isTeacher = auth()->user()->isTeacher();
+        $isParent = auth()->user()->isParent();
+        $isStudent = auth()->user()->isStudent();
+
+        // Minimal Active State (Soft background, dark text)
+        $activeClass = fn($routes) => in_array($currentRoute, (array) $routes)
+            ? 'bg-slate-100 text-slate-900 font-semibold'
+            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900';
+    @endphp
+
+    <!-- Brand (Logo ONLY, no text) -->
+    <div class="h-10 flex items-center justify-between px-6 border-b border-slate-100 shrink-0 bg-blue-800">
+        <a href="{{ route('master') }}" class="flex items-center justify-center w-full">
+            <!-- Adjusted height to make the logo prominent -->
+            <img src="{{ asset('assets/img/wyzeek-logo-dark.png') }}" alt="WYZEEK" class="h-9 w-auto object-contain">
+        </a>
+        <!-- Mobile Close Button -->
+        <button @click="$dispatch('toggle-sidebar')"
+            class="lg:hidden text-slate-400 hover:text-slate-600 absolute right-4 rtl:left-4 rtl:right-auto">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Scrollable Navigation -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+
+        <!-- DASHBOARD -->
+        <div>
+            <a href="{{ route('master') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('master') }}">
+                <i class="fa-solid fa-house w-5 text-center"></i> {{ trans('main-sidebar.dashboard') }}
+            </a>
+        </div>
+
+        <!-- 1. ADMISSION & REGISTRATION -->
+        @if ($isAdmin)
+            <div x-data="{ open: {{ in_array($currentRoute, ['register', 'users', 'users.add', 'user-role.index', 'students.index', 'student.info', 'teachers.index', 'teacher.info', 'parents.index']) ? 'true' : 'false' }} }">
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Admission &
+                    Registration</div>
+                <button @click="open = !open"
+                    class="flex items-center justify-between w-full px-3 py-2 text-sm text-slate-600 hover:text-slate-900 transition-all rounded-xl hover:bg-slate-50">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-user-plus w-5 text-center"></i> Manage
+                        People</div>
+                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+                        :class="open ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="open" x-collapse class="mt-1 space-y-1 ps-10">
+                    <a href="{{ route('students.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['students.index', 'student.info']) }}">Students</a>
+                    <a href="{{ route('teachers.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['teachers.index', 'teacher.info']) }}">Teachers</a>
+                    <a href="{{ route('parents.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['parents.index', 'parent.info']) }}">Parents</a>
+                    <a href="{{ route('users.add') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['users.add', 'register']) }}">Register
+                        User</a>
+                </div>
+            </div>
+        @endif
+
+        <!-- 2. ATTENDANCE -->
+        @if ($isAdmin || $isTeacher)
+            <div>
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Attendance</div>
+                <a href="{{ route('attendances.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass(['attendances.index', 'attendance.classroom']) }}">
+                    <i class="fa-solid fa-clipboard-user w-5 text-center"></i> Take Attendance
+                </a>
+                <a href="{{ route('attendance.report.export') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('attendance.report.export') }}">
+                    <i class="fa-solid fa-download w-5 text-center"></i> Attendance Report
+                </a>
+            </div>
+        @endif
+
+        <!-- 3. EXAM & RESULT -->
+        @if ($isAdmin || $isTeacher)
+            <div x-data="{ open: {{ in_array($currentRoute, ['classrooms.index', 'grade', 'subjects.index', 'exams.index', 'exams.create']) ? 'true' : 'false' }} }">
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Exams & Academics</div>
+                <button @click="open = !open"
+                    class="flex items-center justify-between w-full px-3 py-2 text-sm text-slate-600 hover:text-slate-900 transition-all rounded-xl hover:bg-slate-50">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-book w-5 text-center"></i> Academics
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+                        :class="open ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="open" x-collapse class="mt-1 space-y-1 ps-10">
+                    <a href="{{ route('exams.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass(['exams.index', 'exams.create']) }}">Exams
+                        & Results</a>
+                    <a href="{{ route('subjects.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('subjects.index') }}">Subjects</a>
+                    <a href="{{ route('classrooms.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('classrooms.index') }}">Classrooms</a>
+                    <a href="{{ route('grade') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('grade') }}">Grades</a>
+                </div>
+            </div>
+        @endif
+
+        <!-- 4. FEES & ACCOUNTS -->
+        @if ($isAdmin)
+            <div x-data="{ open: {{ in_array($currentRoute, ['fees.index', 'feesinvoices.index', 'receipts.index', 'payments.index', 'processingfees.index']) ? 'true' : 'false' }} }">
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Fees & Accounts</div>
+                <button @click="open = !open"
+                    class="flex items-center justify-between w-full px-3 py-2 text-sm text-slate-600 hover:text-slate-900 transition-all rounded-xl hover:bg-slate-50">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
+                        Finance</div>
+                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+                        :class="open ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="open" x-collapse class="mt-1 space-y-1 ps-10">
+                    <a href="{{ route('feesinvoices.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('feesinvoices.index') }}">Invoices</a>
+                    <a href="{{ route('payments.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('payments.index') }}">Payments</a>
+                    <a href="{{ route('receipts.index') }}"
+                        class="block px-3 py-2 rounded-lg text-sm {{ $activeClass('receipts.index') }}">Receipts</a>
+                </div>
+            </div>
+        @endif
+
+        <!-- 5. ADMINISTRATION -->
+        @if ($isAdmin)
+            <div>
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Administration</div>
+                <a href="{{ route('settings.academic_years.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('settings.academic_years.index') }}">
+                    <i class="fa-solid fa-calendar w-5 text-center"></i> Academic Years
+                </a>
+                <a href="{{ route('meetings.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('meetings.index') }}">
+                    <i class="fa-solid fa-video w-5 text-center"></i> Online Classes
+                </a>
+                <a href="{{ route('auditlogs.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('auditlogs.index') }}">
+                    <i class="fa-solid fa-clipboard-check w-5 text-center"></i> Audit Logs
+                </a>
+            </div>
+
+            <!-- 6. RBAC (ROLES) -->
+            <div>
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Security (RBAC)</div>
+                <a href="{{ route('user-role.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('user-role.index') }}">
+                    <i class="fa-solid fa-user-shield w-5 text-center"></i> Roles & Permissions
+                </a>
+            </div>
+        @endif
+
+        <!-- 7. NOTICE UPLOAD -->
+        @if (!$isParent)
+            <div>
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Notice Upload</div>
+                <a href="{{ route('posts.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass(['posts.index', 'post.show']) }}">
+                    <i class="fa-solid fa-bullhorn w-5 text-center"></i> Discussions
+                </a>
+            </div>
+        @endif
+
+        <!-- 8. AI CHATBOT -->
+        <div>
+            <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">AI Assistant</div>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+                <i class="fa-solid fa-robot w-5 text-center"></i> AI Chatbot
+            </a>
+        </div>
+
+        <!-- PARENT / STUDENT SPECIFIC -->
+        @if ($isParent)
+            <div>
+                <div class="px-3 mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">My Children</div>
+                <a href="{{ route('parent.students.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('parent.students.index') }}">
+                    <i class="fa-solid fa-users w-5 text-center"></i> View Students
+                </a>
+                <a href="{{ route('parent.students.attendances') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('parent.students.attendances') }}">
+                    <i class="fa-solid fa-clipboard-user w-5 text-center"></i> Attendance
+                </a>
+                <a href="{{ route('parent.students.invoices') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ $activeClass('parent.students.invoices') }}">
+                    <i class="fa-solid fa-file-invoice w-5 text-center"></i> Invoices
+                </a>
+            </div>
+        @endif
+
+    </div>
+
+    <!-- Footer Profile -->
+    <div class="p-4 border-t border-slate-100 shrink-0 bg-white">
+        <a href="{{ route('profile.show') }}"
+            class="flex items-center gap-3 px-3 py-2 rounded-xl transition-all hover:bg-slate-50 {{ $activeClass('profile.show') }}">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-500">
+                <i class="fas fa-user text-sm"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-700 truncate w-32">{{ auth()->user()->name }}</span>
+                <span class="text-[11px] text-slate-400">My Profile</span>
+            </div>
         </a>
     </div>
+</aside>
 
-    <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+<style>
+    /* Custom minimal scrollbar for the sidebar */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
 
-    <div class="items-center block w-auto max-h-screen  h-screen overflow-auto h-sidenav grow basis-full">
-        <ul class="flex flex-col pl-0 mb-0 max-w-64 overflow-y-auto max-h-[calc(100vh-8rem)] ">
-            <li class="mt-0.5 w-full">
-                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap  px-4 font-semibold text-slate-700 transition-colors
-                    {{ Route::currentRouteName() == 'master' ? 'shadow-soft-xl rounded-lg bg-white ' : '' }}"
-                    href="{{ route('master') }}">
-                    <div
-                        class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5
-                        {{ Route::currentRouteName() == 'master' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}">
-                        <i
-                            class="fa-solid fa-house {{ Route::currentRouteName() == 'master' ? 'text-white' : '' }}"></i>
-                    </div>
-                    <div id="sidebariconOnly6" class="sidebar-icon">
-                        <span
-                            class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.dashboard') }}</span>
-                    </div>
-                </a>
-            </li>
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-            <li class="mt-0.5 w-full">
-                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ Route::currentRouteName() == 'profile.show' ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                    href="{{ route('profile.show') }}">
-                    <div
-                        class="{{ Route::currentRouteName() == 'profile.show' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                        <i
-                            class="fas fa-user-shield  {{ Route::currentRouteName() == 'profile.show' ? 'text-white' : '' }}"></i>
-                    </div>
-                    <div id="sidebariconOnly7" class="sidebar-icon">
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 4px;
+    }
 
-                        <span
-                            class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.profile') }}</span>
-                    </div>
-                </a>
-            </li>
-
-
-            @if (auth()->user()->isAdmin())
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon1" data-collapse-toggle="data-accordion-icon1"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['register', 'users', 'users.add', 'user-role.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['register', 'users', 'users.add', 'user-role.index']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}  shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-users-gear {{ in_array(Route::currentRouteName(), ['register', 'users', 'users.add', 'user-role.index']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div id="sidebariconOnly2" class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.users') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon1" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'users.add' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('users.add') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'users.add' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-user-pen {{ Route::currentRouteName() == 'users.add' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.register') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'user-role.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('user-role.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'user-role.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fas fa-user-shield {{ Route::currentRouteName() == 'user-role.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.roles') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon2" data-collapse-toggle="data-accordion-icon2"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), [
-                    'students.index',
-                    'student.info',
-                    'student.edit',
-                    'student.email.edit',
-                    'students.promotions.table',
-                    'students.promotions.classroom',
-                    'students.graduated.table',
-                    'students.graduations.classroom',
-                ])
-                    ? 'shadow-soft-xl rounded-lg bg-white'
-                    : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), [
-                                'students.index',
-                                'student.info',
-                                'student.edit',
-                                'student.email.edit',
-                                'students.promotions.table',
-                                'students.promotions.classroom',
-                                'students.graduated.table',
-                                'students.graduations.classroom',
-                            ])
-                                ? 'bg-gradient-to-tl from-purple-700 to-pink-500'
-                                : '' }}
-                shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-chalkboard-user fa-sharp {{ in_array(Route::currentRouteName(), [
-                                    'students.index',
-                                    'student.info',
-                                    'student.edit',
-                                    'student.email.edit',
-                                    'students.promotions.table',
-                                    'students.promotions.classroom',
-                                    'students.graduated.table',
-                                    'students.graduations.classroom',
-                                ])
-                                    ? 'text-white'
-                                    : '' }}"></i>
-                        </div>
-                        <div id="sidebariconOnly2" class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon2" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['students.index', 'student.info', 'student.edit', 'student.email.edit']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('students.index') }}">
-                                <div
-                                    class="{{ in_array(Route::currentRouteName(), ['students.index', 'student.info', 'student.edit', 'student.email.edit']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-chalkboard-user fa-sharp {{ in_array(Route::currentRouteName(), ['students.index', 'student.info', 'student.edit', 'student.email.edit']) ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'students.promotions.table' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('students.promotions.table') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'students.promotions.table' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-file-arrow-up fa-lg {{ Route::currentRouteName() == 'students.promotions.table' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students.promotions.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'students.promotions.classroom' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('students.promotions.classroom') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'students.promotions.classroom' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-arrow-up-wide-short fa-lg {{ Route::currentRouteName() == 'students.promotions.classroom' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students.promotions.classroom') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'students.graduated.table' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('students.graduated.table') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'students.graduated.table' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-user-graduate fa-lg  {{ Route::currentRouteName() == 'students.graduated.table' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students.graduated.table') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'students.graduations.classroom' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('students.graduations.classroom') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'students.graduations.classroom' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-graduation-cap fa-lg  {{ Route::currentRouteName() == 'students.graduations.classroom' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.students.graduations.classroom') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon7" data-collapse-toggle="data-accordion-icon7"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit', 'teacher.assign.classroom', 'teachers.classrooms']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit', 'teacher.assign.classroom', 'teachers.classrooms']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}  shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-person-chalkboard {{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit', 'teacher.assign.classroom', 'teachers.classrooms']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div id="sidebariconOnly" class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.teachers') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon7" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('teachers.index') }}">
-                                <div
-                                    class="{{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-person-chalkboard {{ in_array(Route::currentRouteName(), ['teachers.index', 'teacher.info', 'teacher.edit', 'teacher.email.edit']) ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.teachers') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['teachers.classrooms']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('teachers.classrooms') }}">
-                                <div
-                                    class="{{ in_array(Route::currentRouteName(), ['teachers.classrooms']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fas fa-chalkboard-teacher {{ in_array(Route::currentRouteName(), ['teachers.classrooms']) ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.teachers.classrooms') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
-
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['parents.index', 'parent.info', 'parent.edit', 'parent.email.edit']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('parents.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['parents.index', 'parent.info', 'parent.edit', 'parent.email.edit']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid  fa-user-group  {{ in_array(Route::currentRouteName(), ['parents.index', 'parent.info', 'parent.edit', 'parent.email.edit']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.parents') }}</span>
-                        </div>
-                    </a>
-                </li>
-
-
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon3" data-collapse-toggle="data-accordion-icon3"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit', 'fee.create', 'fees.types.index', 'feesinvoices.index', 'receipts.index', 'processingfees.index', 'payments.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit', 'fee.create', 'fees.types.index', 'feesinvoices.index', 'receipts.index', 'processingfees.index', 'payments.index']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}
-                shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-landmark fa-lg
-                    {{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit', 'fee.create', 'fees.types.index', 'feesinvoices.index', 'receipts.index', 'processingfees.index', 'payments.index']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.financial_accounts') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon3" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('fees.index') }}">
-                                <div
-                                    class="{{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-file-invoice fa-lg {{ in_array(Route::currentRouteName(), ['fees.index', 'fee.info', 'fee.edit']) ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.fees.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'fee.create' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('fee.create') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'fee.create' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-file-circle-plus fa-lg {{ Route::currentRouteName() == 'fee.create' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.fee.create') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'fees.types.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('fees.types.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'fees.types.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-thumbtack fa-lg  {{ Route::currentRouteName() == 'fees.types.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.fees.types.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'feesinvoices.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('feesinvoices.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'feesinvoices.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-sharp fa-solid fa-file-invoice-dollar fa-lg  {{ Route::currentRouteName() == 'feesinvoices.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.feesinvoices.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'receipts.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('receipts.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'receipts.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-sharp fa-solid fa-receipt fa-lg  {{ Route::currentRouteName() == 'receipts.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.receipts.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'payments.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('payments.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'payments.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-sharp fa-solid fa-money-bills fa-lg  {{ Route::currentRouteName() == 'payments.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.payments.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'processingfees.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('processingfees.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'processingfees.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-sharp fa-solid fa-hand-holding-dollar fa-lg  {{ Route::currentRouteName() == 'processingfees.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.processingfees.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
-
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon4" data-collapse-toggle="data-accordion-icon4"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['subjects.index', 'subjects.create', 'subjects.associate.classroom']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['subjects.index', 'subjects.create', 'subjects.associate.classroom']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}  shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-book fa-lg {{ in_array(Route::currentRouteName(), ['subjects.index', 'subjects.create', 'subjects.associate.classroom']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div id="sidebariconOnly2" class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.subjects.index') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon4" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['subjects.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('subjects.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'subjects.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-book fa-lg {{ Route::currentRouteName() == 'subjects.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.subjects.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'subjects.create' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('subjects.create') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'subjects.create' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-book-open fa-lg {{ Route::currentRouteName() == 'subjects.create' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.subjects.create') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-            @endif
-
-            @if (auth()->user()->isAdmin() || auth()->user()->isTeacher())
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon5" data-collapse-toggle="data-accordion-icon5"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ in_array(Route::currentRouteName(), ['exams.index', 'exams.create']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                    px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['exams.index', 'exams.create']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}  shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-book fa-lg {{ in_array(Route::currentRouteName(), ['exams.index', 'exams.create']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.exams.index') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon5" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ in_array(Route::currentRouteName(), ['exams.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('exams.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'exams.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-book fa-lg {{ Route::currentRouteName() == 'exams.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.exams.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                            {{ Route::currentRouteName() == 'exams.create' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('exams.create') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'exams.create' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-solid fa-book-open fa-lg {{ Route::currentRouteName() == 'exams.create' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.exams.create') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                    {{ in_array(Route::currentRouteName(), ['attendances.index', 'attendance.classroom']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('attendances.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['attendances.index', 'attendance.classroom']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-clipboard-user fa-lg  {{ in_array(Route::currentRouteName(), ['attendances.index', 'attendance.classroom']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.attendances.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                    {{ in_array(Route::currentRouteName(), ['attendance.report.export']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('attendance.report.export') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['attendance.report.export']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-download fa-lg  {{ in_array(Route::currentRouteName(), ['attendance.report.export']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.attendance.report.export') }}</span>
-                        </div>
-                    </a>
-                </li>
-
-
-
-
-                <li class="mt-0.5 w-full" id="listopennavbar">
-                    <a aria-controls="data-accordion-icon6" data-collapse-toggle="data-accordion-icon6"
-                        class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                    {{ in_array(Route::currentRouteName(), ['meetings.index', 'meetings.create']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                        px-4 font-semibold text-slate-700 transition-colors"
-                        href="#">
-
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['meetings.index', 'meetings.create']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }}  shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="shahed shahed-zoom-app text-2xl {{ in_array(Route::currentRouteName(), ['meetings.index', 'meetings.create']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.meetings.index') }}</span>
-                            <i id="arrowicon" class="fa-solid fa-chevron-down px-3  shrink-0"></i>
-                        </div>
-                    </a>
-                    <ul id="data-accordion-icon6" class="hidden px-4 border-l-2 border-gray-400">
-
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                                {{ in_array(Route::currentRouteName(), ['meetings.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                    px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('meetings.index') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'meetings.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="fa-brands fa-readme text-xl {{ Route::currentRouteName() == 'meetings.index' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.meetings.index') }}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="mt-0.5 w-full">
-                            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                                {{ Route::currentRouteName() == 'meetings.create' ? 'shadow-soft-xl rounded-lg bg-white' : '' }}
-                                    px-4 font-semibold text-slate-700 transition-colors"
-                                href="{{ route('meetings.create') }}">
-                                <div
-                                    class="{{ Route::currentRouteName() == 'meetings.create' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                                    <i
-                                        class="shahed shahed-zoom-app text-2xl {{ Route::currentRouteName() == 'meetings.create' ? 'text-white' : '' }}"></i>
-                                </div>
-                                <div class="sidebar-icon">
-                                    <span
-                                        class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.meetings.create') }}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-            @endif
-
-            @if (!auth()->user()->isParent())
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['posts.index', 'post.show']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('posts.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['posts.index', 'post.show']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-pen-to-square fa-lg {{ in_array(Route::currentRouteName(), ['posts.index', 'post.show']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.posts.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-            @endif
-
-
-            @if (auth()->user()->isAdmin())
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ Route::currentRouteName() == 'settings.academic_years.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('settings.academic_years.index') }}">
-                        <div
-                            class="{{ Route::currentRouteName() == 'settings.academic_years.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-calendar fa-lg {{ Route::currentRouteName() == 'settings.academic_years.index' ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.settings.academic_years.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ Route::currentRouteName() == 'grade' ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('grade') }}">
-                        <div
-                            class="{{ Route::currentRouteName() == 'grade' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-graduation-cap {{ Route::currentRouteName() == 'grade' ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.grades') }}</span>
-                        </div>
-                    </a>
-                </li>
-
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ Route::currentRouteName() == 'classrooms.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('classrooms.index') }}">
-                        <div
-                            class="{{ Route::currentRouteName() == 'classrooms.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fas fa-chalkboard-teacher  {{ Route::currentRouteName() == 'classrooms.index' ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.classes') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap
-                {{ Route::currentRouteName() == 'auditlogs.index' ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('classrooms.index') }}">
-                        <div
-                            class="{{ Route::currentRouteName() == 'auditlogs.index' ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-clipboard-check  {{ Route::currentRouteName() == 'auditlogs.index' ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.auditlogs.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-            @endif
-
-
-            @if (auth()->user()->isTeacher())
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['teacher.classrooms', 'student.info']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('teacher.classrooms') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['teacher.classrooms', 'student.info']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-pen-to-square fa-lg {{ in_array(Route::currentRouteName(), ['teacher.classrooms', 'student.info']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.teacher.classrooms') }}</span>
-                        </div>
-                    </a>
-                </li>
-            @endif
-
-            @if (auth()->user()->isStudent())
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['student.subjects.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('student.subjects.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['student.subjects.index']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-book fa-lg  {{ in_array(Route::currentRouteName(), ['student.subjects.index']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.student.subjects.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['meetings.student.index']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('meetings.student.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['meetings.student.index']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-brands fa-readme text-xl {{ in_array(Route::currentRouteName(), ['meetings.student.index']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.meetings.student.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-            @endif
-            @if (auth()->user()->isParent())
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['parent.students.index', 'student.info']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('parent.students.index') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['parent.students.index', 'student.info']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-chalkboard-user fa-sharp fa-lg {{ in_array(Route::currentRouteName(), ['parent.students.index', 'student.info']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.parent.students.index') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['parent.students.attendances']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('parent.students.attendances') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['parent.students.attendances']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-solid fa-clipboard-user fa-lg {{ in_array(Route::currentRouteName(), ['parent.students.attendances']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.parent.students.attendances') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['parent.students.invoices']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('parent.students.invoices') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['parent.students.invoices']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-sharp fa-solid fa-file-invoice-dollar fa-lg   {{ in_array(Route::currentRouteName(), ['parent.students.invoices']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.parent.students.invoices') }}</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0.5 w-full">
-                    <a class="py-2.7 text-sm ease-nav-brand my-0 mx-1 flex items-center whitespace-nowrap {{ in_array(Route::currentRouteName(), ['parent.students.receipts']) ? 'shadow-soft-xl rounded-lg bg-white' : '' }} px-4 font-semibold text-slate-700 transition-colors"
-                        href="{{ route('parent.students.receipts') }}">
-                        <div
-                            class="{{ in_array(Route::currentRouteName(), ['parent.students.receipts']) ? 'bg-gradient-to-tl from-purple-700 to-pink-500' : '' }} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                            <i
-                                class="fa-sharp fa-solid fa-receipt fa-lg  {{ in_array(Route::currentRouteName(), ['parent.students.receipts']) ? 'text-white' : '' }}"></i>
-                        </div>
-                        <div class="sidebar-icon">
-                            <span
-                                class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">{{ trans('main-sidebar.parent.students.receipts') }}</span>
-                        </div>
-                    </a>
-                </li>
-            @endif
-
-
-
-        </ul>
-    </div>
-
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #cbd5e1;
+    }
+</style>
 
 </aside>

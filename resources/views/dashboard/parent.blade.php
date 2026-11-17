@@ -64,3 +64,6 @@
 </div>
 
 
+
+
+@include('dashboard.wyzeek-role-insights', ['role' => 'parent'])

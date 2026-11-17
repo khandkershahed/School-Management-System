@@ -64,3 +64,6 @@
         <livewire:calendar />
     </div>
 </div>
+
+
+@include('dashboard.wyzeek-role-insights', ['role' => 'student'])

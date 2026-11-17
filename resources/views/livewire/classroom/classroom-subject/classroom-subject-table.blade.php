@@ -1,5 +1,5 @@
 <div class="py-6 sm:py-12 bg-slate-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
 
             <div class="p-4 sm:p-6">
